@@ -4,7 +4,7 @@ import os, sys
 import subprocess
 from subprocess import *
 
-def entradas:
+def entradas():
     name = str(input("\nBucket name: ")) 
 
     print("\nChoose one of the regions listed below: ")
@@ -158,7 +158,7 @@ def main():
     p2_out = p2.communicate(configure_access_key)
     p3 = subprocess.Popen(configure_secret_key, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
     p3_out = p2.communicate(configure_secret_key)
-    
+
     p3 = subprocess.run('terraform apply -auto-approve', shell=True)   
 
 main()
