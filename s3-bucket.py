@@ -5,7 +5,7 @@ import subprocess
 from subprocess import *
 
 def entradas():
-    name = str(input("\nBucket name: ")) 
+    name = str(input("\nBucket name: "))  # variable that will name the directory and the bucket
 
     print("\nChoose one of the regions listed below: ")
     print("\n1) US East (N. Virginia)")
@@ -105,13 +105,13 @@ def entradas():
     return name, region, access_key_id, secret_access_key
 
 def escrita(name, region):
-    parent_dir = os.getcwd()
-    path = os.path.join(parent_dir, name)
+    parent_dir = os.getcwd()                # parent_dir has the current directory's address
+    path = os.path.join(parent_dir, name)   # path has the address of the new directory
 
     os.mkdir(path)
     print("\nDirectory '% s' created" % name)
     
-    os.chdir(path)
+    os.chdir(path)                          # change to the new directory
     
     variables = os.open("variables.tf", os.O_RDWR|os.O_CREAT)
     
@@ -120,7 +120,7 @@ def escrita(name, region):
         "variable \"bucket_name\" {\n", "\tdescription = \"Value that sets the bucket name\"\n", 
         "\ttype        = string\n", "\tdefault     = \"", name, "\"\n", "}"]
     
-    for i in s_variables:
+    for i in s_variables:                   # writes every line of variable.tf with the list os strings s_variables
         line = str.encode(i)
         num = os.write(variables, line)
 
@@ -136,7 +136,7 @@ def escrita(name, region):
         "resource \"aws_s3_bucket\" \"b\" {\n", "\tbucket = var.bucket_name\n", 
         "\tacl\t= \"private\"\n", "\n", "\ttags = {\n", "\t\tEnviroment = \"Dev\"\n", "\t}\n", "}"]
     
-    for i in s_main:
+    for i in s_main:                        # writes every line of main.tf with the list os strings s_main
         line = str.encode(i)
         num = os.write(main, line)
 
@@ -149,14 +149,12 @@ def main():
 
     escrita(name, region)
 
-    configure_access_key = "aws configure set aws_access_key_id " + access_key_id
-    configure_secret_key = "aws configure set aws_secret_access_key " + secret_access_key
+    configure_access_key = "aws configure set aws_access_key_id " + access_key_id           # stores the command to configure the aws access key
+    configure_secret_key = "aws configure set aws_secret_access_key " + secret_access_key   # stores the command to configure the aws secret key
 
     p1 = subprocess.run('terraform init', shell=True)
-
     p2 = subprocess.run(configure_access_key, shell=True)
     p3 = subprocess.run(configure_secret_key, shell=True)
-
     p4 = subprocess.run('terraform apply -auto-approve', shell=True)   
 
 main()
