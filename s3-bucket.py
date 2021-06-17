@@ -4,8 +4,7 @@ import os, sys
 import subprocess
 from subprocess import *
 
-def main():
-    print("\t\t\tDESAFIO TÉCNICO DAREDE")
+def entradas:
     name = str(input("\nBucket name: ")) 
 
     print("\nChoose one of the regions listed below: ")
@@ -100,6 +99,12 @@ def main():
         else:
             print("\n\t\tInvalid region. Try again")
 
+    access_key_id = str(input("ACCESS KEY ID: "))
+    secret_access_key = str(input("SECRET ACCESS KEY: "))
+
+    return name, region, access_key_id, secret_access_key
+
+def escrita(name, region):
     parent_dir = os.getcwd()
     path = os.path.join(parent_dir, name)
 
@@ -122,7 +127,6 @@ def main():
     os.close(variables)
 
 
-
     main = os.open("main.tf", os.O_RDWR|os.O_CREAT)
     
     s_main = ["terraform {\n", "\trequired_providers {\n", "\t\taws = {\n", 
@@ -138,7 +142,23 @@ def main():
 
     os.close(main)
 
+def main():
+    print("\t\t\tDESAFIO TÉCNICO DAREDE")
+
+    name, region, access_key_id, secret_access_key = entradas()
+
+    escrita(name, region)
+
+    configure_access_key = "aws configure set aws_access_key_id " + access_key_id
+    configure_secret_key = "aws configure set aws_secret_access_key " + secret_access_key
+
     p1 = subprocess.run('terraform init', shell=True)
-    p2 = subprocess.run('terraform apply', shell=True)   
+
+    p2 = subprocess.Popen(configure_access_key, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p2_out = p2.communicate(configure_access_key)
+    p3 = subprocess.Popen(configure_secret_key, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
+    p3_out = p2.communicate(configure_secret_key)
+    
+    p3 = subprocess.run('terraform apply -auto-approve', shell=True)   
 
 main()
