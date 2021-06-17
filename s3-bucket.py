@@ -154,11 +154,9 @@ def main():
 
     p1 = subprocess.run('terraform init', shell=True)
 
-    p2 = subprocess.Popen(configure_access_key, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    p2_out = p2.communicate(configure_access_key)
-    p3 = subprocess.Popen(configure_secret_key, stdin=subprocess.PIPE, stdout=subprocess.PIPE)
-    p3_out = p2.communicate(configure_secret_key)
+    p2 = subprocess.run(configure_access_key, shell=True)
+    p3 = subprocess.run(configure_secret_key, shell=True)
 
-    p3 = subprocess.run('terraform apply -auto-approve', shell=True)   
+    p4 = subprocess.run('terraform apply -auto-approve', shell=True)   
 
 main()
